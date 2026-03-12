@@ -49,8 +49,6 @@ export class HomePage {
         // if it is always in the cache
         const cacheIndex = fullPath.indexOf('/cache/');
         if (cacheIndex === -1) {
-          console.error('Scanned PDF is not in cache directory. Cannot rename. URI:', uri);
-          alert('Scanned PDF is not in cache directory. Cannot rename.');
           Share.share({ url: uri });
           return;
         }
