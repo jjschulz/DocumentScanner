@@ -7,6 +7,11 @@
 </ion-header>
 <ion-content class="ion-padding">
     <ion-button expand="block" (click)="startDocumentScan()">Start Document Scan</ion-button>
+    <!-- add an ion input for the user to choose the document name before scanning -->
+     <ion-item>
+        <ion-label position="floating">Document Name</ion-label>
+        <ion-input [(ngModel)]="documentName" placeholder="Enter a name for your document before scanning"></ion-input>
+     </ion-item>
     <ion-item>
         <ol>
             <li>Click the "Start Document Scan" button to open the document scanner.</li>               

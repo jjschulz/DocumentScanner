@@ -3,6 +3,7 @@ import { LiveUpdate } from '@capawesome/capacitor-live-update';
 import { App } from '@capacitor/app';
 import { DocumentScanner } from '@capacitor-mlkit/document-scanner';
 import { Share } from '@capacitor/share';
+import { Filesystem, Directory } from '@capacitor/filesystem';
 
 @Component({
   selector: 'app-home',
@@ -11,6 +12,7 @@ import { Share } from '@capacitor/share';
   standalone: false,
 })
 export class HomePage {
+  documentName: string | undefined;
 
   async ngOnInit() {
     // await DocumentScanner.installGoogleDocumentScannerModule();
@@ -36,18 +38,39 @@ export class HomePage {
     });
   }
 
-  startDocumentScan(){
-    DocumentScanner.scanDocument({ resultFormats: 'PDF'}).then((result) => {
+  async startDocumentScan() {
+    try {
+      const result = await DocumentScanner.scanDocument({ resultFormats: 'PDF' });
       if (result.pdf) {
-        Share.share({ url: result.pdf.uri});
+        const uri = result.pdf.uri;
+        const filePathMatch = uri.match(/^file:\/\/(.*)$/);
+        const fullPath = filePathMatch ? filePathMatch[1] : uri;
+        const newFileName = this.documentName ? `${this.documentName}.pdf` : `scanned-document-${Date.now()}.pdf`;
+        // if it is always in the cache
+        const cacheIndex = fullPath.indexOf('/cache/');
+        if (cacheIndex === -1) {
+          console.error('Scanned PDF is not in cache directory. Cannot rename. URI:', uri);
+          alert('Scanned PDF is not in cache directory. Cannot rename.');
+          Share.share({ url: uri });
+          return;
+        }
+        const relativePath = fullPath.substring(cacheIndex + '/cache/'.length);
+        await Filesystem.rename({
+          from: relativePath,
+          to: newFileName,
+          directory: Directory.Cache,
+        });
+
+        let newFileUri = uri.replace(/[^\/]+$/, newFileName);
+        console.log('File renamed successfully:', newFileUri);
+        Share.share({ url: newFileUri });
       }
       // result.pdfInfo; // { uri: string, pageCount: number }
       // this.documentImageData = result.scannedImages;
-    }).then((result) => {
       console.log('Document scan result:', result);
-    }).catch((error) => {
+    } catch (error) {
       console.error('Error during document scan:', error);
-    });
+    }
   }
 
 }
