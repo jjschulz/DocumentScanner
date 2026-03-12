@@ -1,20 +1,19 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+<ion-header>
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
-</ion-content>
+        <ion-title class="ion-text-center ion-margin-top">
+            Scan and Share
+        </ion-title>
+    </ion-toolbar> 
+</ion-header>
+<ion-content class="ion-padding">
+    <ion-button expand="block" (click)="startDocumentScan()">Start Document Scan</ion-button>
+    <ion-item>
+        <ol>
+            <li>Click the "Start Document Scan" button to open the document scanner.</li>               
+            <li>Scan a document using your device's camera.</li>
+            <li>Add as many pages as you need while scanning before hitting the next button.</li>
+            <li>Once you are done scanning, click the "Next" button to proceed.</li>
+            <li>You will be prompted to share with another application.  Pick that application or email to attach and share your document.</li>
+        </ol>
+    </ion-item>
+</ion-content> 
